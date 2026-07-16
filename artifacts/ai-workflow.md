@@ -2,7 +2,7 @@
 
 ## Tools used and why
 
-Claude Code (claude-sonnet-4-6) throughout. The task mixes code, DOM investigation, and structured writing — a code-capable model running scripts in the same session keeps the investigation auditable.
+Claude Code (claude-sonnet-4-6) throughout. Considered Cursor and Copilot but the task spans DOM investigation, test authoring, and artifact writing in one session — switching tools mid-investigation would have broken this write-up's audit trail.
 
 ## What AI generated vs. what was corrected
 
