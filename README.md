@@ -2,6 +2,8 @@
 
 ## Setup
 
+**Prerequisites:** Node.js 18 or higher.
+
 ```bash
 git clone https://github.com/osama4test/sqa-homework-osama-rashid.git
 cd sqa-homework-osama-rashid
