@@ -11,8 +11,8 @@ The streaming UI is polished: the send button instantly becomes a red stop butto
 **1. Cookie banner physically covers pills and the input on first visit**
 The OneTrust banner sits over the bottom third of the viewport on desktop and obscures the textarea on mobile. A first-time visitor cannot interact with the page until engaging with the banner. Fix: make the banner a top-bar or reduce its z-index. Business impact: every user who abandons instead of dismissing is lost before they see the product value.
 
-**2. Pills are invisible to new users**
-The auto-greeting fires on every new browser session and replaces the empty-state (pills) with a conversation view before users see the pills. Pills only appear on return visits. The localStorage key that controls this (`undefined-auto-message-sent`) has a code bug — the conversation ID resolves as `undefined` instead of an actual ID. Fix: delay the greeting until after the user's first input, or render pills alongside the greeting rather than as a mutually exclusive state.
+**2. Pills are never rendered for new users**
+Confirmed by 8 clean-context trials: the chat container is absent from the DOM until the greeting arrives (~2.8–3.4 s after navigation). There is no transient empty state — the app takes one of two code paths at mount based on a localStorage key (`undefined-auto-message-sent`): key present → empty state with pills; no key → greeting path, container never initialises until the API responds. Both the `/api/agent/suggestions-unauthenticated` and `/api/agent/ask-unauthenticated` calls fire simultaneously; the greeting wins. The key name is itself a code bug — the conversation ID resolves as `undefined` instead of a real ID. Fix: delay the auto-greeting until after the user's first input, or render pills as a persistent quick-start panel alongside the greeting.
 
 **3. Mobile: cookie banner footer text overflows visually**
 At 375×667 the copyright line in the banner wraps across three rows in an unfinished layout. Not a blocker but a poor first impression exactly when the user is deciding whether to trust the site with their data.

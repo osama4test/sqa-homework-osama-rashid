@@ -4,10 +4,11 @@ import { dismissCookieBanner, waitForStableText, seedEmptyConversation } from '.
 const URL = 'https://ask.permission.ai';
 
 // ─── Test 1 ──────────────────────────────────────────────────────────────────
-// Pills are the empty-conversation state. The app fires an auto-greeting on
-// every fresh session (localStorage key absent), which hides the pills.
-// seedEmptyConversation() pre-seeds the key before navigation so the greeting
-// is suppressed and pills render — this is the returning-user state.
+// Pills are the empty-conversation state. In fresh sessions (no localStorage
+// key), the app skips the empty state entirely — the chat container is absent
+// from DOM until the greeting API response arrives, so pills are never rendered.
+// seedEmptyConversation() pre-seeds the key so the returning-user path runs
+// and pills render instead.
 test('page loads with suggested-topic pills visible after cookie banner dismissed', async ({ page }) => {
   await page.addInitScript(seedEmptyConversation());
   await page.goto(URL);
