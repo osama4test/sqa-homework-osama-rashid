@@ -10,34 +10,33 @@ npx playwright install chromium
 npm test
 ```
 
-`npm test` runs all 8 tests headless and writes an HTML report to `artifacts/report/`.
-Open `artifacts/report/index.html` in a browser to view results.
+`npm test` runs all 8 tests headless and writes an HTML report to `artifacts/report/index.html`.
 
 ## Test strategy (TL;DR)
 
-**Covered:** pill visibility (empty-state), pill-click agent response with structural Part 2 assertions, free-text submission response, Shift+Enter newline, Enter submit, empty/whitespace disabled-button gate, mobile 375×667 no overflow + reachability, Log in/Sign Up route navigation.
+**Covered:** pill visibility (empty-state), pill-click agent response with Part 2 structural assertions, free-text submission response, Shift+Enter newline, Enter submit, empty/whitespace button-disabled gate, mobile 375×667 no overflow + input reachability, Log in/Sign Up route navigation.
 
-**Skipped:** post-login authenticated flows (wallet, referrals, interests) — can't automate past email verification. Exact response text — non-deterministic by design; see `artifacts/assertions.md`. Cross-browser (Firefox, Safari) — within budget, Chromium covers the core behaviors.
+**Skipped:** post-login authenticated flows (can't automate past email verification). Exact response text (non-deterministic by design; see `artifacts/assertions.md`). Cross-browser (Chromium covers core behaviors within budget).
 
-**Key constraint:** pills are the empty-conversation state, suppressed whenever an agent greeting is present. Tests 1, 2, and 7 pre-seed a localStorage flag (`undefined-auto-message-sent`) via `page.addInitScript` to reproduce the returning-user state. This is documented in `artifacts/assertions.md`.
+**Key constraint:** tests 1, 2, and 7 pre-seed a localStorage flag (`undefined-auto-message-sent`) via `page.addInitScript` to show pills — pills are the empty-conversation state, suppressed by the auto-greeting on every fresh session. Documented in `artifacts/assertions.md`.
 
 ## Key decisions
 
-- **Playwright + TypeScript** over Cypress or Selenium: native auto-wait, first-class TypeScript, built-in HTML reporter, no separate server process. Cypress was rejected because its iframe restrictions and global install requirement add friction for a reviewer doing a clean clone.
+- **Playwright + TypeScript** over Cypress or Selenium: native auto-wait, first-class TS, built-in HTML reporter, no separate server. Cypress rejected for iframe restrictions and global install requirement.
 
-- **Built-in HTML reporter** over Allure or custom dashboards: zero config, self-contained, readable in any browser. Allure requires a separate Java process; overkill for 8 tests.
+- **Built-in HTML reporter** over Allure: zero config, self-contained output. Allure requires a separate Java process — overkill for 8 tests.
 
-- **`waitForStableText` polling** over `waitForSelector` on the stop button alone: the stop button disappearing signals the network stream ended, not that React has finished rendering the full text. Content stability across 3 consecutive 500ms checks is the actual done signal. Fixed `waitForTimeout` was rejected — it over-waits on fast networks and under-waits on slow ones.
+- **`waitForStableText` polling** over `waitForSelector` on the stop button alone: the stop button disappearing signals stream end, not render completion. Content stability across 3 × 500ms checks is the actual done signal. Fixed `waitForTimeout` rejected — over-waits on fast networks, under-waits on slow.
 
-- **50-char minimum, keyword regex, no-error-string assertions** over exact text or semantic scoring: exact text is brittle to model changes; LLM-eval (DeepEval) adds infrastructure cost better suited to a nightly schedule. The three checks together are sufficient to catch rendering failures, empty responses, and gross off-topic replies.
+- **50-char floor + keyword regex + no-error-string** over exact text or LLM-eval: exact text breaks on model updates; DeepEval adds infrastructure cost better suited to a nightly schedule.
 
-- **`page.addInitScript` localStorage pre-seed** over network interception or timing tricks to show pills: blocking the greeting endpoint doesn't suppress the greeting (it's rendered from React's initial state, gated by the localStorage flag). Pre-seeding the flag is the only reliable mechanism, and it accurately reproduces the returning-user state.
+- **`page.addInitScript` localStorage pre-seed** over network interception to reveal pills: blocking the known endpoints doesn't suppress the greeting (it's gated by the localStorage key). Pre-seeding the flag is the only reliable mechanism and accurately reproduces the returning-user state.
 
-- **Flat file structure** (no page-object model) over `pages/` or `fixtures/` directories: 8 tests don't justify the indirection. One `helpers.ts` with two exported functions keeps locator logic close to the tests that use them.
+- **Flat file structure** over page-object model: 8 tests don't justify the indirection. One `helpers.ts` with two functions keeps locators close to the tests that use them.
 
-- **Single `test.describe` for mobile** over a second Playwright project: a second project would double the total run time and make the test count ambiguous. One `describe` with `test.use({ viewport })` keeps the count unambiguously at 8.
+- **Single `test.describe` for mobile** over a second Playwright project: a second project doubles run time and makes the test count ambiguous.
 
-- **`getByRole('button', { name })` for pills** over class-based selectors: pills have no `data-testid`; role + accessible name is the most semantically stable locator and survives CSS class changes.
+- **`getByRole('button', { name })` for pills** over class-based selectors: pills have no `data-testid`; role + name survives CSS changes.
 
 ## AI disclosure
 
@@ -45,7 +44,7 @@ See [artifacts/ai-workflow.md](artifacts/ai-workflow.md).
 
 ## Next steps
 
-With 1–2 more days: wire the suite into GitHub Actions (push-triggered, Chromium only, artifact upload for the HTML report); add a DeepEval `AnswerRelevancyMetric` check on a nightly schedule for the Part 2 response; automate a post-login smoke test for wallet balance display using a seeded test account that bypasses email verification; and add an accessibility audit pass with `@axe-core/playwright` focused on the cookie banner and input hint text.
+Wire into GitHub Actions (push-triggered, Chromium, artifact upload); add DeepEval `AnswerRelevancyMetric` on a nightly schedule; automate a post-login smoke test for wallet display using a seeded test account; add an `@axe-core/playwright` accessibility audit on the cookie banner and input hint text.
 
 ## Submission checklist
 
@@ -54,9 +53,9 @@ With 1–2 more days: wire the suite into GitHub Actions (push-triggered, Chromi
 - [x] README word count ≤ 500 (excluding commands/checkboxes)
 - [x] Max 8 tests; all 4 required behaviors covered
 - [x] artifacts/assertions.md included (≤ 300 words)
-- [x] artifacts/ux-review.md included (≤ 400 words, desktop + mobile, post-signup exploration, 3–5 prioritised improvements)
+- [x] artifacts/ux-review.md included (≤ 400 words, desktop + mobile, post-signup, 3–5 prioritised improvements)
 - [x] artifacts/data-checks.md included (≤ 300 words + SQL)
 - [x] artifacts/ai-workflow.md included (≤ 300 words, all 4 questions answered)
-- [x] artifacts/report/ included (generated on `npm test`)
+- [x] artifacts/report/ included
 - [ ] artifacts/demo.mp4 included (60–90 sec narrated — record manually)
 - [x] Commit history shows how the work evolved
