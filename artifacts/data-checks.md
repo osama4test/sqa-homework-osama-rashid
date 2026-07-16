@@ -16,6 +16,8 @@ After clicking the verification link: `email_verified = true`, `used_at` set.
 
 After interests-selection onboarding: `user_interests(user_id, category_id, selected_at)` rows.
 
+If signed up via a referral link (Referrals section observed in authenticated sidebar): `referral_conversions(id, referrer_id, referred_user_id, converted_at)` linking the referrer to the new account.
+
 **User messages the agent** (`POST /api/agent/ask-unauthenticated` or authenticated equivalent):
 
 | Table | Columns written |
