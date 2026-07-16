@@ -4,15 +4,15 @@ import { dismissCookieBanner, waitForStableText, seedEmptyConversation } from '.
 const URL = 'https://ask.permission.ai';
 
 // ─── Test 1 ──────────────────────────────────────────────────────────────────
-// Pills are the empty-conversation state. In fresh sessions (no localStorage
-// key), the app skips the empty state entirely — the chat container is absent
-// from DOM until the greeting API response arrives, so pills are never rendered.
-// WHY we seed instead of waiting or intercepting the network: the branch
-// decision (empty-state vs greeting path) is made synchronously at component
-// mount, before any fetch fires. No amount of waiting reveals pills in a clean
-// context; intercepting /api/agent/ask-unauthenticated still doesn't flip the
-// branch. Pre-seeding the key is the only mechanism that works, and it
-// accurately models the real returning-user state.
+// Pills appear when `undefined-auto-message-sent` is present in localStorage
+// at home page mount. The key is written on the very first mount in a fresh
+// browser context — absent only on the literal first-ever home visit; every
+// subsequent visit (including after login or logout, which do not touch the key)
+// shows pills instead. Fresh Playwright contexts always start with empty
+// localStorage, so without seeding every run is the first-ever-visit scenario.
+// Seeding before navigation accurately represents the state nearly all real
+// users are in — not an artificial workaround but the correct default state.
+// See helpers.ts:seedEmptyConversation for implementation.
 test('page loads with suggested-topic pills visible after cookie banner dismissed', async ({ page }) => {
   await page.addInitScript(seedEmptyConversation());
   await page.goto(URL);

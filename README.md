@@ -18,7 +18,7 @@ npm test
 
 **Skipped:** post-login authenticated flows (can't automate past email verification). Exact response text (non-deterministic by design; see `artifacts/assertions.md`). Cross-browser (Chromium covers core behaviors within budget).
 
-**Key constraint:** tests 1, 2, and 7 pre-seed a localStorage flag (`undefined-auto-message-sent`) via `page.addInitScript`. In fresh sessions the app takes the greeting path and the chat container is absent from DOM until the first API response — pills are never rendered, confirmed across 8 clean-context trials. The branch decision is synchronous at mount, so neither waiting longer nor intercepting the greeting endpoint reveals pills. Pre-seeding is the only mechanism that works and accurately models the returning-user state where pills appear. Documented in `artifacts/assertions.md`.
+**Key constraint:** tests 1, 2, and 7 pre-seed `undefined-auto-message-sent` in localStorage via `page.addInitScript`. The key is written on the very first home page mount in a fresh browser context, so pills are absent only on that one first-ever visit; every subsequent visit finds the key and shows pills. Fresh Playwright contexts always start with empty localStorage, making every unseed run the first-ever-visit scenario. Seeding accurately represents the state nearly all real users are in. Documented in `artifacts/assertions.md`.
 
 ## Key decisions
 
@@ -30,7 +30,7 @@ npm test
 
 - **50-char floor + keyword regex + no-error-string** over exact text or LLM-eval: exact text breaks on model updates; DeepEval adds infrastructure cost better suited to a nightly schedule.
 
-- **`page.addInitScript` localStorage pre-seed** over network interception to reveal pills: blocking the known endpoints doesn't suppress the greeting (it's gated by the localStorage key). Pre-seeding the flag is the only reliable mechanism and accurately reproduces the returning-user state.
+- **`page.addInitScript` localStorage pre-seed** over network interception or longer waits: `undefined-auto-message-sent` is absent only on a browser's literal first-ever home visit — every subsequent visit finds it and shows pills. Fresh Playwright contexts start with empty localStorage, so every unseeded run is the first-ever-visit scenario. Seeding is the only mechanism that puts the app in the state nearly all real users are actually in.
 
 - **Flat file structure** over page-object model: 8 tests don't justify the indirection. One `helpers.ts` with two functions keeps locators close to the tests that use them.
 
