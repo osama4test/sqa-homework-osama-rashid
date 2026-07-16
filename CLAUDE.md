@@ -256,35 +256,35 @@ Run through this as an actual pass over the repo, not from memory. Report
 back status on every line — don't just say "done," show what was checked.
 
 **Their official submission checklist (from the brief, verbatim):**
-- [ ] Repo named `sqa-homework-osama-rashid` and default branch is `main`
-- [ ] README includes exact Setup + run commands (verified from a clean clone)
-- [ ] README word count ≤ 500 (excluding commands/checkboxes)
-- [ ] Max 8 tests; all 4 required behaviors covered
-- [ ] artifacts/assertions.md included (≤ 300 words)
-- [ ] artifacts/ux-review.md included (≤ 400 words, desktop + mobile, post-signup exploration, 3–5 prioritized improvements)
-- [ ] artifacts/data-checks.md included (≤ 300 words + SQL: expected data, verification queries, one pipeline integrity check)
-- [ ] artifacts/ai-workflow.md included (≤ 300 words, all 4 questions answered)
-- [ ] artifacts/report/ included (or hosted link + screenshot)
-- [ ] artifacts/demo.mp4 included (60–90 sec, narrated: suite + report + one Part 2 assertion explained)
-- [ ] Commit history shows how the work evolved
+- [x] Repo named `sqa-homework-osama-rashid` and default branch is `main`
+- [x] README includes exact Setup + run commands (verified from a clean clone)
+- [x] README word count ≤ 500 (excluding commands/checkboxes)
+- [x] Max 8 tests; all 4 required behaviors covered
+- [x] artifacts/assertions.md included (≤ 300 words)
+- [x] artifacts/ux-review.md included (≤ 400 words, desktop + mobile, post-signup exploration, 3–5 prioritized improvements)
+- [x] artifacts/data-checks.md included (≤ 300 words + SQL: expected data, verification queries, one pipeline integrity check)
+- [x] artifacts/ai-workflow.md included (≤ 300 words, all 4 questions answered)
+- [x] artifacts/report/ included (or hosted link + screenshot)
+- [x] artifacts/demo.mp4 included (60–90 sec, narrated: suite + report + one Part 2 assertion explained)
+- [x] Commit history shows how the work evolved
 
 **Additional checks specific to how we built this (not on their list, but
 we're accountable for them):**
-- [ ] `artifacts/_ai-notes.md` scratch file deleted, not committed in final state
-- [ ] No test anywhere asserts exact/full agent response text — grep for
+- [x] `artifacts/_ai-notes.md` scratch file deleted, not committed in final state
+- [x] No test anywhere asserts exact/full agent response text — grep for
       literal strings being compared against response content
-- [ ] No page-object files exist (`pages/`, `fixtures/`, `utils/` folders) —
+- [x] No page-object files exist (`pages/`, `fixtures/`, `utils/` folders) —
       structure is still flat per Phase 0/Key decisions
-- [ ] No fixed `waitForTimeout` used as the mechanism for waiting on a
+- [x] No fixed `waitForTimeout` used as the mechanism for waiting on a
       streaming response to complete
-- [ ] Every artifact `.md` file re-read once, specifically checking for any
+- [x] Every artifact `.md` file re-read once, specifically checking for any
       sentence that could apply to a generic chat product rather than this one
-- [ ] `ai-workflow.md`'s "mistake AI got wrong" is sourced from a
+- [x] `ai-workflow.md`'s "mistake AI got wrong" is sourced from a
       `[user-caught]` entry in the notes, not `[self-caught]`
-- [ ] Word counts actually counted (not eyeballed) for every capped file
-- [ ] Clean clone + `npm install` + `npm test` run through once, exactly as
+- [x] Word counts actually counted (not eyeballed) for every capped file
+- [x] Clean clone + `npm install` + `npm test` run through once, exactly as
       README's Setup section instructs, to confirm it works from scratch
-- [ ] No secrets, API keys, or `.env` values committed anywhere in history
+- [x] No secrets, API keys, or `.env` values committed anywhere in history
 
 Only after this full pass is confirmed clean is the repo ready to submit.
 
