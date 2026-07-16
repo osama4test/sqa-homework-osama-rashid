@@ -18,7 +18,7 @@ npm test
 
 **Skipped:** post-login authenticated flows (can't automate past email verification). Exact response text (non-deterministic by design; see `artifacts/assertions.md`). Cross-browser (Chromium covers core behaviors within budget).
 
-**Key constraint:** tests 1, 2, and 7 pre-seed a localStorage flag (`undefined-auto-message-sent`) via `page.addInitScript` to show pills — pills are the empty-conversation state, suppressed by the auto-greeting on every fresh session. Documented in `artifacts/assertions.md`.
+**Key constraint:** tests 1, 2, and 7 pre-seed a localStorage flag (`undefined-auto-message-sent`) via `page.addInitScript`. In fresh sessions the app takes the greeting path and the chat container is absent from DOM until the first API response — pills are never rendered, confirmed across 8 clean-context trials. The branch decision is synchronous at mount, so neither waiting longer nor intercepting the greeting endpoint reveals pills. Pre-seeding is the only mechanism that works and accurately models the returning-user state where pills appear. Documented in `artifacts/assertions.md`.
 
 ## Key decisions
 

@@ -7,8 +7,12 @@ const URL = 'https://ask.permission.ai';
 // Pills are the empty-conversation state. In fresh sessions (no localStorage
 // key), the app skips the empty state entirely — the chat container is absent
 // from DOM until the greeting API response arrives, so pills are never rendered.
-// seedEmptyConversation() pre-seeds the key so the returning-user path runs
-// and pills render instead.
+// WHY we seed instead of waiting or intercepting the network: the branch
+// decision (empty-state vs greeting path) is made synchronously at component
+// mount, before any fetch fires. No amount of waiting reveals pills in a clean
+// context; intercepting /api/agent/ask-unauthenticated still doesn't flip the
+// branch. Pre-seeding the key is the only mechanism that works, and it
+// accurately models the real returning-user state.
 test('page loads with suggested-topic pills visible after cookie banner dismissed', async ({ page }) => {
   await page.addInitScript(seedEmptyConversation());
   await page.goto(URL);
