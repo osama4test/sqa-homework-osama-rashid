@@ -1,16 +1,16 @@
 # Response validation assertions (Part 2)
 
-Test: `suite.spec.ts:32` — "clicking 'What is Permission' pill produces an agent response"
+Test: `suite.spec.ts:37` — "clicking 'What is Permission' pill produces an agent response"
 
 ## What IS asserted
 
-**Structural count** (`line 39`): `.flex.justify-start` count increases by exactly 1 after pill click. Confirms a new agent bubble was added to the DOM.
+**Structural count** (`line 47`): `.flex.justify-start` count increases by exactly 1 after pill click. Confirms a new agent bubble was added to the DOM.
 
-**Minimum length** (`line 44`): `text.length >= 50`. The 50-char floor is the same threshold used in `waitForStableText` — one number, two roles: polling doesn't stop until the text is at least 50 chars AND stable across 3 consecutive 500ms checks.
+**Minimum length** (`line 55`): `text.length >= 50`. The 50-char floor is the same threshold used in `waitForStableText` — one number, two roles: polling doesn't stop until the text is at least 50 chars AND stable across 3 consecutive 500ms checks.
 
-**Topical relevance** (`line 45`): case-insensitive `/permission|data|ask|earn/`. Any genuine response to "What is Permission" will contain at least one of these terms. Loose signal, not a semantic check.
+**Topical relevance** (`line 56`): case-insensitive `/permission|data|ask|earn/`. Any genuine response to "What is Permission" will contain at least one of these terms. Loose signal, not a semantic check.
 
-**No error strings** (`line 46`): `/\bundefined\b|\bnull\b|\berror\b/` must be absent. Catches rendering bugs (unresolved template variables, thrown exceptions serialised into the UI) without constraining legitimate content.
+**No error strings** (`line 57`): `/\bundefined\b|\bnull\b|\berror\b/` must be absent. Catches rendering bugs (unresolved template variables, thrown exceptions serialised into the UI) without constraining legitimate content.
 
 ## What is deliberately NOT asserted
 

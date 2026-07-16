@@ -8,7 +8,7 @@ The streaming UI is polished: the send button instantly becomes a red stop butto
 
 ## Issues, prioritised
 
-**1. Cookie banner physically covers pills and the input on first visit**
+**1. Cookie banner blocks the input on every visit, and pills on return visits**
 The OneTrust banner sits over the bottom third of the viewport on desktop and obscures the textarea on mobile. A first-time visitor cannot interact with the page until engaging with the banner. Fix: make the banner a top-bar or reduce its z-index. Business impact: every user who abandons instead of dismissing is lost before they see the product value.
 
 **2. Pills are never rendered for new users**
