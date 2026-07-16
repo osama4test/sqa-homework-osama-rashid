@@ -10,7 +10,7 @@ Claude generated exploration scripts, `helpers.ts` polling logic, all 8 tests, a
 
 ## One thing AI got wrong that I caught
 
-In Phase 0 the AI concluded "pills will be visible after cookie dismiss with a sufficiently long wait." My pushback: "investigate the root cause rather than picking an assertion blind." The investigation revealed the real mechanism: the app fires an auto-greeting on every fresh browser session (gated by a localStorage key), which renders a message and switches the UI out of the empty-state view. Pills never appear in a fresh Playwright context regardless of wait time or viewport. The fix — pre-seeding `undefined-auto-message-sent` in localStorage via `addInitScript` — was derived from inspecting the DOM timeline and localStorage state.
+After 8 clean-context trials the AI concluded pills were deterministically absent for new users — greeting always wins. I tested manually: login → logout → home showed all 6 pills. The AI re-investigated with controlled path A/B trials; I required raw per-run localStorage snapshots at every step, not a narrative summary. Real mechanism: `undefined-auto-message-sent` is written on the first-ever home mount and never cleared by login or logout — pills appear on every subsequent visit. The original conclusion had to be corrected in ux-review.md: what looked like a persistent product gap is first-visit-only.
 
 ## What was deliberately built by hand
 
