@@ -3,7 +3,7 @@
 ## Setup
 
 ```bash
-git clone https://github.com/OsamaR/sqa-homework-osama-rashid.git
+git clone https://github.com/osama4test/sqa-homework-osama-rashid.git
 cd sqa-homework-osama-rashid
 npm install
 npx playwright install chromium
